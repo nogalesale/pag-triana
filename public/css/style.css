@@ -1,0 +1,1014 @@
+/* General Settings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: white;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Header */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+}
+
+.header-content h1 {
+    font-size: 2.5rem;
+    margin: 10px 0;
+}
+
+.header-content p {
+    font-size: 1.2rem;
+}
+
+/* Section Styling */
+.section {
+    width: 80%;
+    max-width: 1200px;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.section h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+    border-bottom: 3px solid #47db22;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+.product-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Product Card */
+.product {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    padding: 15px;
+}
+
+.product img {
+    background: transparent;
+    width: 100%;
+    border-bottom: 2px solid #1e88e5;
+    padding-bottom: 10px;
+}
+
+.product h3 {
+    font-size: 1.3rem;
+    margin: 15px 0 10px;
+    color: #1e88e5;
+}
+
+.product p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.product .price {
+    font-size: 1.1rem;
+    color: #1e88e5;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.product .btn {
+    background-color: #1e88e5;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.product .btn:hover {
+    background-color: #1565c0;
+}
+
+/* Product Hover Effects */
+.product:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.footer h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.footer .links ul {
+    list-style: none;
+}
+
+.footer .links ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.footer .links ul li a {
+    color: #1e88e5;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer .links ul li a:hover {
+    color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .section h2 {
+        font-size: 1.8rem;
+    }
+
+    .header-content h1 {
+        font-size: 2rem;
+    }
+
+    .header-content p {
+        font-size: 1rem;
+    }
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.header-button {
+    background-color: #e33737;
+    color: white;
+    padding: 10px 15px;
+    margin: 0 10px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.header-button:hover {
+    background-color:#0abb39;
+}
+.cart {
+    background-color: #f8f8f8;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart h2 {
+    text-align: center;
+    color: #333;
+}
+
+.cart-items {
+    margin: 20px 0;
+}
+
+.cart-items p {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+}
+
+.checkout {
+    display: block;
+    margin: 0 auto;
+    background-color: #1e88e5;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.checkout:hover {
+    background-color: #1565c0;
+}
+.cart-items {
+    margin-top: 20px;
+}
+
+.cart-items div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.remove-from-cart {
+    margin-left: 10px;
+    background-color: transparent; /* Rojo */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.remove-from-cart:hover {
+    background-color: transparent; /* Rojo oscuro */
+}
+/* Contenedor del formulario */
+.form-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.styled-form h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.styled-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.styled-form input,
+.styled-form select {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.styled-form input:focus,
+.styled-form select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 5px rgba(30,136,229,0.5);
+}
+
+.styled-form button.header-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  background-color: #0abb39;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.styled-form button.header-button:hover {
+  background-color: #08a32d;
+}
+
+#mensaje {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+}
+/* Contenedor del formulario */
+.form-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.styled-form h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.styled-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.styled-form input,
+.styled-form select {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.styled-form input:focus,
+.styled-form select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 5px rgba(30,136,229,0.5);
+}
+
+.styled-form button.header-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  background-color: #0abb39;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.styled-form button.header-button:hover {
+  background-color: #08a32d;
+}
+
+#mensaje {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+}
+/* Contenedor del formulario */
+.form-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.styled-form h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.styled-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.styled-form input,
+.styled-form select {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.styled-form input:focus,
+.styled-form select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 5px rgba(30,136,229,0.5);
+}
+
+.styled-form button.header-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  background-color: #0abb39;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.styled-form button.header-button:hover {
+  background-color: #08a32d;
+}
+
+#mensaje {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+}
+/* Contenedor del formulario */
+.form-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.styled-form h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.styled-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.styled-form input,
+.styled-form select {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.styled-form input:focus,
+.styled-form select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 5px rgba(30,136,229,0.5);
+}
+
+.styled-form button.header-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  background-color: #0abb39;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.styled-form button.header-button:hover {
+  background-color: #08a32d;
+}
+
+#mensaje {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+}
+/* Contenedor del formulario */
+.form-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background-color: #f8f8f8;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.styled-form h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.styled-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.styled-form input,
+.styled-form select {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.styled-form input:focus,
+.styled-form select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 5px rgba(30,136,229,0.5);
+}
+
+.styled-form button.header-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  background-color: #0abb39;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.styled-form button.header-button:hover {
+  background-color: #08a32d;
+}
+
+#mensaje {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+}
+/* Contenedor de la tabla con scroll horizontal en móviles */
+.admin-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  overflow-x: auto; /* Scroll horizontal si la tabla es demasiado ancha */
+}
+
+/* Tabla responsiva */
+.admin-table {
+  width: 100%;
+  min-width: 800px; /* Mantener un ancho mínimo */
+  border-collapse: collapse;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+  .admin-table th,
+  .admin-table td {
+    padding: 8px 5px;
+    font-size: 0.75rem;
+  }
+
+  .admin-table th {
+    font-size: 0.8rem;
+  }
+
+  .admin-container {
+    margin: 20px auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-table {
+    min-width: 600px; /* Tabla aún scrollable */
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 6px 4px;
+    font-size: 0.7rem;
+  }
+}
+.admin-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+.admin-container h1 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.admin-container p {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  background-color: #1e88e5;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.admin-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.admin-table tr:hover {
+  background-color: #d0ebff;
+}
+.login-container {
+  width: 90%;
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.login-container input:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 5px rgba(30,136,229,0.5);
+}
+
+.login-container button.header-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1rem;
+  margin-top: 10px;
+  background-color: #0abb39;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.login-container button.header-button:hover {
+  background-color: #08a32d;
+}
+
+#loginMessage {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f4fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #004080;
+    font-size: 2em;
+    margin-bottom: 40px;
+  }
+  
+  .teacher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+  }
+  
+  .teacher {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .teacher img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  
+  .teacher h3 {
+    margin-top: 12px;
+    color: #004080;
+  }
+  
+  .teacher p {
+    margin: 6px 0;
+    font-size: 14px;
+  }
+  
+  .teacher.hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  
+  .btn.volver {
+    display: block;
+    width: 200px;
+    margin: 50px auto 0;
+    background-color: #004080;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .btn.volver:hover {
+    background-color: #0066cc;
+  }
+  /* ======= SECCIÓN ACERCA DEL COLEGIO ======= */
+.about-section {
+  max-width: 1000px;
+  margin: 60px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.about-section h1 {
+  text-align: center;
+  font-size: 2.2em;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+.about-block p {
+  font-size: 1.1em;
+  color: #333;
+  line-height: 1.6;
+  text-align: justify;
+  margin-bottom: 20px;
+}
+
+.image-placeholder {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.image-placeholder img {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.info-extra {
+  margin-top: 40px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 15px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+.info-extra h2 {
+  color: #007bff;
+  font-size: 1.6em;
+  margin-bottom: 10px;
+}
+
+.info-extra p {
+  color: #444;
+  font-size: 1.05em;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* Botón volver */
+.btn-volver {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 25px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-volver:hover {
+  background: #0056b3;
+}
+
+/* 📱 Diseño responsivo */
+@media (max-width: 768px) {
+  .about-section {
+    margin: 20px;
+    padding: 15px;
+  }
+
+  .about-section h1 {
+    font-size: 1.8em;
+  }
+
+  .image-placeholder img {
+    max-width: 100%;
+  }
+
+  .info-extra h2 {
+    font-size: 1.4em;
+  }
+
+  .about-block p {
+    font-size: 1em;
+  }
+}
+/* === Formulario de Preinscripción === */
+.form-container {
+  max-width: 900px;
+  width: 90%;
+  background: white;
+  padding: 30px;
+  margin: 40px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.form-container p {
+  text-align: center;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.form-grid input,
+.form-grid select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+button.btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #3498db;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button.btn:hover {
+  background-color: #2980b9;
+}
+
+/* Footer del formulario */
+footer {
+  text-align: center;
+  background-color: #2c3e50;
+  color: white;
+  padding: 15px;
+  margin-top: 40px;
+  width: 100%;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* === Responsivo === */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 20px;
+  }
+
+  .form-container h1 {
+    font-size: 1.6rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  button.btn {
+    font-size: 1rem;
+  }
+}
+/* ---------- Botón de WhatsApp ---------- */
+.btn-whatsapp {
+  background-color: #25D366;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.btn-whatsapp:hover {
+  background-color: #1ebe57;
+}
+
+/* ---------- Mensaje bonito de éxito ---------- */
+.mensaje-exito {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4BB543;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-size: 16px;
+  text-align: center;
+  font-family: sans-serif;
+  animation: fadeInOut 3s ease;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}

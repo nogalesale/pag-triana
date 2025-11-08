@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de Inscripción</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">Sistema de inscripción</a>
+  </header>
+
+  <main class="form-container">
+    <h1>Formulario de Inscripción</h1>
+    <p>Completa los datos para iniciar tu inscripción.</p>
+
+    <form id="formPreinscripcion">
+      <h3>Datos del estudiante</h3>
+      <div class="form-grid">
+        <input type="text" name="nombres" placeholder="Nombres" required />
+        <input type="text" name="apellidos" placeholder="Apellidos" required />
+        <input type="text" name="ci" placeholder="Cédula de identidad" required />
+        <input type="date" name="fecha_nac" required />
+        <select name="genero" required>
+          <option value="">Selecciona género</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Femenino">Femenino</option>
+        </select>
+        <input type="text" name="grado" placeholder="Grado al que postula" required />
+        <input type="text" name="direccion" placeholder="Dirección" required />
+        <input 
+          type="tel" 
+          name="telefono" 
+          placeholder="+59171234567" 
+          pattern="^\+591\d{8}$" 
+          required 
+          title="Debe ingresar el número con formato internacional, por ejemplo: +59171234567"
+        />
+        <input type="email" name="email" placeholder="Correo del estudiante" />
+        <input type="text" name="procedencia" placeholder="Unidad educativa de procedencia" />
+      </div>
+
+      <h3>Datos del tutor</h3>
+      <div class="form-grid">
+        <input type="text" name="t_nombre" placeholder="Nombre del tutor" required />
+        <input 
+          type="tel" 
+          name="t_cel" 
+          placeholder="+59171234567" 
+          pattern="^\+591\d{8}$" 
+          required 
+          title="Debe ingresar el número con formato internacional, por ejemplo: +59171234567"
+        />
+        <input type="text" name="t_parentezco" placeholder="Parentesco" required />
+        <input type="email" name="t_email" placeholder="Correo del tutor" />
+        <input type="text" name="emergencia" placeholder="Número de emergencia" required />
+      </div>
+
+      <button type="submit" class="btn">Enviar preinscripción</button>
+
+      <!-- Botón del asistente virtual -->
+      <button type="button" class="btn-whatsapp" onclick="abrirWhatsApp()">
+        💬 Habla con nuestro asistente virtual
+      </button>
+    </form>
+  </main>
+
+  <footer>
+    <h3>U.E. Marcelino Champagnat</h3>
+    <p>Una página hecha por estudiantes de la promo &copy; 2025</p>
+  </footer>
+
+  <script>
+    document
+      .getElementById("formPreinscripcion")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        // Validar número de WhatsApp
+        if (!data.telefono.startsWith("+591")) {
+          alert("Por favor, escribe el número con el formato +591XXXXXXXXX");
+          return;
+        }
+
+        const res = await fetch("/api/preinscripcion", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+
+        // Crear mensaje bonito de éxito
+        const mensajeExito = document.createElement("div");
+        mensajeExito.textContent = result.message || "✅ Formulario enviado con éxito. ¡Gracias por inscribirte!";
+        mensajeExito.className = "mensaje-exito";
+        document.body.appendChild(mensajeExito);
+
+        // Desaparece después de 3 segundos
+        setTimeout(() => mensajeExito.remove(), 3000);
+
+        if (res.ok) form.reset();
+      });
+
+    // Función para abrir WhatsApp
+    function abrirWhatsApp() {
+      const numero = "+14155238886"; 
+      const mensaje = "join simplest-place";
+      const url = `https://wa.me/${numero.replace("+","")}?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, "_blank");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Administrador</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>Login Administrador</h1>
+    <form id="loginForm">
+      <input type="text" name="username" placeholder="Usuario" required />
+      <input type="password" name="password" placeholder="Contraseña" required />
+      <button type="submit" class="header-button">Ingresar</button>
+    </form>
+    <p id="loginMessage"></p>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const datos = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const res = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(datos),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          // Redirige al panel si es correcto
+          window.location.href = "/admin";
+        } else {
+          document.getElementById("loginMessage").textContent = data.message;
+          document.getElementById("loginMessage").style.color = "red";
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById("loginMessage").textContent = "Error de conexión.";
+        document.getElementById("loginMessage").style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

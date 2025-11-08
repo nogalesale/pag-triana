@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrativo - Preinscripciones</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">Sistema de inscripción</a>
+  </header>
+
+  <main class="admin-container">
+    <h1>Panel Administrativo</h1>
+    <p>Listado de preinscripciones recibidas:</p>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombres</th>
+          <th>Apellidos</th>
+          <th>CI</th>
+          <th>Fecha Nac</th>
+          <th>Género</th>
+          <th>Grado</th>
+          <th>Teléfono</th>
+          <th>Email</th>
+          <th>Procedencia</th>
+          <th>Tutor</th>
+          <th>Celular Tutor</th>
+          <th>Parentesco</th>
+          <th>Email Tutor</th>
+          <th>Emergencia</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaPreinscripciones">
+        <!-- Datos se llenan con JS -->
+      </tbody>
+    </table>
+  </main>
+
+  <footer>
+    <h3>U.E Marcelino Champagnat</h3>
+    <p>Una página hecha por estudiantes de la promo &copy; 2025</p>
+  </footer>
+
+  <script>
+    async function cargarPreinscripciones() {
+      try {
+        const res = await fetch("/api/preinscripciones");
+        const data = await res.json();
+
+        const tbody = document.getElementById("tablaPreinscripciones");
+        tbody.innerHTML = "";
+
+        data.forEach(item => {
+          const tr = document.createElement("tr");
+
+          let claseEstado = "";
+          if(item.estado === "aceptado") claseEstado = "estado-aceptado";
+          else if(item.estado === "rechazado") claseEstado = "estado-rechazado";
+
+          tr.innerHTML = `
+            <td>${item.id}</td>
+            <td>${item.nombres}</td>
+            <td>${item.apellidos}</td>
+            <td>${item.ci}</td>
+            <td>${item.fecha_nac}</td>
+            <td>${item.genero}</td>
+            <td>${item.grado}</td>
+            <td>${item.telefono}</td>
+            <td>${item.email}</td>
+            <td>${item.procedencia}</td>
+            <td>${item.t_nombre}</td>
+            <td>${item.t_cel}</td>
+            <td>${item.t_parentezco}</td>
+            <td>${item.t_email}</td>
+            <td>${item.emergencia}</td>
+            <td class="${claseEstado}">${item.estado}</td>
+            <td>
+              <button class="btn-aceptar" onclick="aceptarEstudiante(${item.id})">Aceptar</button>
+              <button class="btn-rechazar" onclick="rechazarEstudiante(${item.id})">Rechazar</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("No se pudieron cargar las preinscripciones.");
+      }
+    }
+
+    function aceptarEstudiante(id) {
+      fetch("/api/aceptar_estudiante", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({id})
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        cargarPreinscripciones();
+      })
+      .catch(console.error);
+    }
+
+    function rechazarEstudiante(id) {
+      fetch("/api/rechazar_estudiante", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({id})
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        cargarPreinscripciones();
+      })
+      .catch(console.error);
+    }
+
+    window.onload = cargarPreinscripciones;
+  </script>
+</body>
+</html>
