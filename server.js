@@ -9,6 +9,7 @@ import session from "express-session";
 import twilio from "twilio";
 import dotenv from "dotenv";
 import multer from "multer"; // 📸 Para subir imágenes
+import fs from "fs"; // 👈 para verificar carpetas de subida
 
 dotenv.config(); // Cargar variables del .env
 
@@ -20,10 +21,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 3️⃣ Middlewares
-app.use(cors());
+app.use(cors()); // 👈 Permite que Render acepte peticiones desde el mismo dominio o externos
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public")); // ✅ ruta simplificada para Render
+app.use(express.static("public")); // ✅ para Render
 
 // 3️⃣b Configurar sesión
 app.use(
@@ -31,7 +32,7 @@ app.use(
     secret: "mi_clave_secreta123",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 1000 }, // 1 hora
+    cookie: { maxAge: 60 * 60 * 1000 },
   })
 );
 
@@ -42,7 +43,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
   else console.log("✅ Conexión a SQLite correcta");
 });
 
-// Crear tabla preinscripciones
+// Crear tablas si no existen
 db.run(`
   CREATE TABLE IF NOT EXISTS preinscripciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,7 +66,6 @@ db.run(`
   )
 `);
 
-// ✅ Nueva tabla pagos
 db.run(`
   CREATE TABLE IF NOT EXISTS pagos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -78,12 +78,17 @@ db.run(`
 `);
 
 // 📸 Configurar almacenamiento de Multer
+const uploadDir = path.join(__dirname, "public", "uploads", "comprobantes");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/uploads/comprobantes"); // carpeta donde se guardan los comprobantes
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // nombre único del archivo
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 const upload = multer({ storage });
@@ -99,7 +104,7 @@ app.get("/login", (req, res) => res.sendFile(path.join(__dirname, "views", "logi
 app.get("/docentes", (req, res) => res.sendFile(path.join(__dirname, "views", "docentes.html")));
 app.get("/acerca", (req, res) => res.sendFile(path.join(__dirname, "views", "acerca.html")));
 app.get("/ubicacion", (req, res) => res.sendFile(path.join(__dirname, "views", "ubicacion.html")));
-app.get("/pago", (req, res) => res.sendFile(path.join(__dirname, "views", "pago.html"))); // Nueva página de pagos
+app.get("/pago", (req, res) => res.sendFile(path.join(__dirname, "views", "pago.html")));
 
 // 7️⃣ Middleware de autenticación
 function authAdmin(req, res, next) {
@@ -172,18 +177,28 @@ app.get("/api/preinscripciones", authAdmin, (req, res) => {
 
 // ✅ 1️⃣2️⃣ Registrar pago con imagen del comprobante
 app.post("/api/registrar_pago", upload.single("comprobante"), (req, res) => {
-  const { nombre, correo, monto, fecha } = req.body;
-  const comprobante = req.file ? `/uploads/comprobantes/${req.file.filename}` : null;
+  try {
+    const { nombre, correo, monto, fecha } = req.body;
+    const comprobante = req.file ? `/uploads/comprobantes/${req.file.filename}` : null;
 
-  const sql = `
-    INSERT INTO pagos (nombre, correo, monto, fecha, comprobante)
-    VALUES (?, ?, ?, ?, ?)
-  `;
+    const sql = `
+      INSERT INTO pagos (nombre, correo, monto, fecha, comprobante)
+      VALUES (?, ?, ?, ?, ?)
+    `;
 
-  db.run(sql, [nombre, correo, monto, fecha, comprobante], function (err) {
-    if (err) res.status(500).json({ message: "Error al registrar el pago" });
-    else res.json({ message: "Pago registrado correctamente ✅" });
-  });
+    db.run(sql, [nombre, correo, monto, fecha, comprobante], function (err) {
+      if (err) {
+        console.error("❌ Error SQL:", err.message);
+        res.status(500).json({ message: "Error al registrar el pago" });
+      } else {
+        console.log("✅ Pago guardado:", nombre, correo, monto);
+        res.json({ message: "Pago registrado correctamente ✅" });
+      }
+    });
+  } catch (err) {
+    console.error("❌ Error general:", err);
+    res.status(500).json({ message: "Error al procesar el pago" });
+  }
 });
 
 // ✅ 1️⃣3️⃣ Mostrar lista de pagos (solo admin)
@@ -229,7 +244,7 @@ app.post("/api/aceptar_estudiante", authAdmin, (req, res) => {
       if (err) return res.status(500).json({ message: err.message });
 
       const mensaje =
-        "✅ Tu formulario fue aprobado. ¡Bienvenido! puedes pagar en linea mediante la pag https://pag-triana.onrender.com , escoges pago en linea.";
+        "✅ Tu formulario fue aprobado. ¡Bienvenido! Puedes pagar en línea mediante la página https://pag-triana.onrender.com (sección 'Pago en línea').";
       try {
         await enviarWhatsApp(numero, mensaje);
         res.json({ message: "Estudiante aceptado y mensaje enviado" });
@@ -252,8 +267,7 @@ app.post("/api/rechazar_estudiante", authAdmin, (req, res) => {
     db.run("UPDATE preinscripciones SET estado='rechazado' WHERE id=?", [id], async function (err) {
       if (err) return res.status(500).json({ message: err.message });
 
-      const mensaje =
-        "❌ Tu formulario fue rechazado. Para más información, contacta a la institución.";
+      const mensaje = "❌ Tu formulario fue rechazado. Para más información, contacta a la institución.";
       try {
         await enviarWhatsApp(numero, mensaje);
         res.json({ message: "Estudiante rechazado y mensaje enviado" });
