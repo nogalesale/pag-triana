@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago de Inscripción</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f6fb;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #333;
+      font-weight: bold;
+      text-align: left;
+    }
+    input[type="text"], input[type="email"], input[type="number"], input[type="date"], input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #1e88e5;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #1565c0;
+    }
+    .mensaje {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .qr-container {
+      margin-bottom: 25px;
+    }
+    .qr-container img {
+      max-width: 250px;
+      width: 100%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pago de Inscripción</h2>
+
+    <!-- Imagen QR -->
+    <div class="qr-container">
+      <img src="/img/cuere.jpeg" alt="QR de pago">
+      <p>Escanea el QR para pagar directamente desde tu aplicación de pago.</p>
+       <p>rellena el formulario con los datos exactos del estudiante a inscribir.</p>
+    </div>
+
+    <!-- Formulario -->
+    <form id="formPago" enctype="multipart/form-data">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" id="correo" name="correo" required />
+
+      <label for="monto">Monto pagado (Bs):</label>
+      <input type="number" id="monto" name="monto" step="0.01" required />
+
+      <label for="fecha">Fecha del pago:</label>
+      <input type="date" id="fecha" name="fecha" required />
+
+      <label for="comprobante">Subir comprobante (imagen):</label>
+      <input type="file" id="comprobante" name="comprobante" accept="image/*" required />
+
+      <button type="submit">Registrar Pago</button>
+    </form>
+
+    <p class="mensaje" id="mensaje"></p>
+  </div>
+
+  <script>
+    // Rellenar campos si vienen desde la página de preinscripción
+    const params = new URLSearchParams(window.location.search);
+    const nombre = params.get("nombre");
+    const correo = params.get("correo");
+    if(nombre) document.getElementById("nombre").value = nombre;
+    if(correo) document.getElementById("correo").value = correo;
+
+    const form = document.getElementById("formPago");
+    const mensaje = document.getElementById("mensaje");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch("/api/registrar_pago", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          mensaje.style.color = "green";
+          mensaje.textContent = data.message;
+          form.reset();
+        } else {
+          mensaje.style.color = "red";
+          mensaje.textContent = data.message || "Error al enviar el pago";
+        }
+      } catch (error) {
+        mensaje.style.color = "red";
+        mensaje.textContent = "Error de conexión con el servidor";
+      }
+    });
+  </script>
+</body>
+</html>

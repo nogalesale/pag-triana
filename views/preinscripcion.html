@@ -15,52 +15,130 @@
     <h1>Formulario de Inscripción</h1>
     <p>Completa los datos para iniciar tu inscripción.</p>
 
-    <form id="formPreinscripcion">
+    <!-- NUEVO PÁRRAFO SOBRE PAGO -->
+    <p class="nota-pago">
+      Si tu inscripción fue aceptada, puedes pagar en línea y enviar tus datos.
+    </p>
+
+    <form id="formPreinscripcion" novalidate>
       <h3>Datos del estudiante</h3>
       <div class="form-grid">
-        <input type="text" name="nombres" placeholder="Nombres" required />
-        <input type="text" name="apellidos" placeholder="Apellidos" required />
-        <input type="text" name="ci" placeholder="Cédula de identidad" required />
-        <input type="date" name="fecha_nac" required />
-        <select name="genero" required>
-          <option value="">Selecciona género</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Femenino">Femenino</option>
-        </select>
-        <input type="text" name="grado" placeholder="Grado al que postula" required />
-        <input type="text" name="direccion" placeholder="Dirección" required />
-        <input 
-          type="tel" 
-          name="telefono" 
-          placeholder="+59171234567" 
-          pattern="^\+591\d{8}$" 
-          required 
-          title="Debe ingresar el número con formato internacional, por ejemplo: +59171234567"
-        />
-        <input type="email" name="email" placeholder="Correo del estudiante" />
-        <input type="text" name="procedencia" placeholder="Unidad educativa de procedencia" />
+        <label>
+          Nombres
+          <input type="text" name="nombres" required />
+        </label>
+        <label>
+          Apellidos
+          <input type="text" name="apellidos" required />
+        </label>
+        <label>
+          Cédula de identidad
+          <input type="text" name="ci" required />
+        </label>
+        <label>
+          Fecha de nacimiento
+          <input type="date" name="fecha_nac" required />
+        </label>
+        <label>
+          Género
+          <select name="genero" required>
+            <option value="">Selecciona género</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+          </select>
+        </label>
+        <label>
+          Curso al que postula
+          <select name="grado" required>
+            <option value="">Selecciona el curso</option>
+            <optgroup label="Nivel Inicial">
+              <option value="Prekínder">Prekínder</option>
+              <option value="Kínder">Kínder</option>
+            </optgroup>
+            <optgroup label="Primaria">
+              <option value="1ro de Primaria">1ro de Primaria</option>
+              <option value="2do de Primaria">2do de Primaria</option>
+              <option value="3ro de Primaria">3ro de Primaria</option>
+              <option value="4to de Primaria">4to de Primaria</option>
+              <option value="5to de Primaria">5to de Primaria</option>
+              <option value="6to de Primaria">6to de Primaria</option>
+            </optgroup>
+            <optgroup label="Secundaria">
+              <option value="1ro de Secundaria">1ro de Secundaria</option>
+              <option value="2do de Secundaria">2do de Secundaria</option>
+              <option value="3ro de Secundaria">3ro de Secundaria</option>
+              <option value="4to de Secundaria">4to de Secundaria</option>
+              <option value="5to de Secundaria">5to de Secundaria</option>
+              <option value="6to de Secundaria">6to de Secundaria</option>
+            </optgroup>
+          </select>
+        </label>
+        <label>
+          Dirección
+          <input type="text" name="direccion" required />
+        </label>
+        <label>
+          Teléfono del estudiante
+          <input 
+            type="tel" 
+            name="telefono" 
+            placeholder="+59171234567"
+            pattern="^\+?[0-9]{8,15}$"
+            required
+          />
+        </label>
+        <label>
+          Correo del estudiante
+          <input type="email" name="email" placeholder="correo@ejemplo.com" />
+        </label>
+        <label>
+          Unidad educativa de procedencia
+          <input type="text" name="procedencia" />
+        </label>
       </div>
 
       <h3>Datos del tutor</h3>
       <div class="form-grid">
-        <input type="text" name="t_nombre" placeholder="Nombre del tutor" required />
-        <input 
-          type="tel" 
-          name="t_cel" 
-          placeholder="+59171234567" 
-          pattern="^\+591\d{8}$" 
-          required 
-          title="Debe ingresar el número con formato internacional, por ejemplo: +59171234567"
-        />
-        <input type="text" name="t_parentezco" placeholder="Parentesco" required />
-        <input type="email" name="t_email" placeholder="Correo del tutor" />
-        <input type="text" name="emergencia" placeholder="Número de emergencia" required />
+        <label>
+          Nombre del tutor
+          <input type="text" name="t_nombre" required />
+        </label>
+        <label>
+          Celular del tutor
+          <input 
+            type="tel" 
+            name="t_cel" 
+            placeholder="+59171234567"
+            pattern="^\+?[0-9]{8,15}$"
+            required
+          />
+        </label>
+        <label>
+          Parentesco
+          <input type="text" name="t_parentezco" required />
+        </label>
+        <label>
+          Correo del tutor
+          <input type="email" name="t_email" placeholder="correo@ejemplo.com" />
+        </label>
+        <label>
+          Número de emergencia
+          <input 
+            type="tel" 
+            name="emergencia"
+            placeholder="+59170000000"
+            pattern="^\+?[0-9]{8,15}$"
+            required
+          />
+        </label>
       </div>
 
-      <button type="submit" class="btn">Enviar preinscripción</button>
-      <p>Dale click al boton verde y envia el codigo predeterminado a nuestro asistente virtual  para que te informe sobre la aceptacion o rechazo de tu inscripcion</p>
+      <button type="submit" class="btn">Enviar Inscripción</button>
 
-      <!-- Botón del asistente virtual -->
+      <p class="nota-whatsapp">
+        Luego de enviar el formulario, comunícate con nuestro asistente virtual para conocer el estado de tu solicitud.
+      </p>
+
       <button type="button" class="btn-whatsapp" onclick="abrirWhatsApp()">
         💬 Habla con nuestro asistente virtual
       </button>
@@ -73,19 +151,29 @@
   </footer>
 
   <script>
-    document
-      .getElementById("formPreinscripcion")
-      .addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const data = Object.fromEntries(new FormData(form).entries());
+    const form = document.getElementById("formPreinscripcion");
 
-        // Validar número de WhatsApp
-        if (!data.telefono.startsWith("+591")) {
-          alert("Por favor, escribe el número con el formato +591XXXXXXXXX");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      const telefonos = ["telefono", "t_cel", "emergencia"];
+      for (let campo of telefonos) {
+        const valor = data[campo];
+        const regex = /^\+?[0-9]{8,15}$/;
+        if (!regex.test(valor)) {
+          alert(`El campo "${campo}" no tiene un número válido. Ej: +59171234567`);
           return;
         }
+      }
 
+      try {
         const res = await fetch("/api/preinscripcion", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -94,21 +182,22 @@
 
         const result = await res.json();
 
-        // Crear mensaje bonito de éxito
         const mensajeExito = document.createElement("div");
-        mensajeExito.textContent = result.message || "✅ Formulario enviado con éxito. ¡Gracias por inscribirte!";
+        mensajeExito.textContent =
+          result.message || "✅ Formulario enviado con éxito. ¡Gracias por inscribirte!";
         mensajeExito.className = "mensaje-exito";
         document.body.appendChild(mensajeExito);
-
-        // Desaparece después de 3 segundos
         setTimeout(() => mensajeExito.remove(), 3000);
 
         if (res.ok) form.reset();
-      });
+      } catch (err) {
+        alert("Ocurrió un error al enviar el formulario. Intenta nuevamente.");
+        console.error(err);
+      }
+    });
 
-    // Función para abrir WhatsApp
     function abrirWhatsApp() {
-      const numero = "+14155238886"; 
+      const numero = "+14155238886";
       const mensaje = "join simplest-place";
       const url = `https://wa.me/${numero.replace("+","")}?text=${encodeURIComponent(mensaje)}`;
       window.open(url, "_blank");

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Administrativo - Preinscripciones</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Administrativo - Inscripciones</title>
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
   <header class="header">
@@ -13,85 +13,172 @@
 
   <main class="admin-container">
     <h1>Panel Administrativo</h1>
-    <p>Listado de preinscripciones recibidas:</p>
 
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombres</th>
-          <th>Apellidos</th>
-          <th>CI</th>
-          <th>Fecha Nac</th>
-          <th>Género</th>
-          <th>Grado</th>
-          <th>Teléfono</th>
-          <th>Email</th>
-          <th>Procedencia</th>
-          <th>Tutor</th>
-          <th>Celular Tutor</th>
-          <th>Parentesco</th>
-          <th>Email Tutor</th>
-          <th>Emergencia</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tablaPreinscripciones">
-        <!-- Datos se llenan con JS -->
-      </tbody>
-    </table>
+    <!-- 🔹 Filtrado por curso -->
+    <div class="tabs">
+      <select id="selectorCurso" onchange="filtrarPorCurso(this.value)">
+        <option value="todos">Todos los cursos</option>
+        <optgroup label="Nivel Inicial">
+          <option value="Prekínder">Prekínder</option>
+          <option value="Kínder">Kínder</option>
+        </optgroup>
+        <optgroup label="Primaria">
+          <option value="1ro de Primaria">1ro de Primaria</option>
+          <option value="2do de Primaria">2do de Primaria</option>
+          <option value="3ro de Primaria">3ro de Primaria</option>
+          <option value="4to de Primaria">4to de Primaria</option>
+          <option value="5to de Primaria">5to de Primaria</option>
+          <option value="6to de Primaria">6to de Primaria</option>
+        </optgroup>
+        <optgroup label="Secundaria">
+          <option value="1ro de Secundaria">1ro de Secundaria</option>
+          <option value="2do de Secundaria">2do de Secundaria</option>
+          <option value="3ro de Secundaria">3ro de Secundaria</option>
+          <option value="4to de Secundaria">4to de Secundaria</option>
+          <option value="5to de Secundaria">5to de Secundaria</option>
+          <option value="6to de Secundaria">6to de Secundaria</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- 🔹 Tabla de inscripciones -->
+    <h2>Preinscripciones</h2>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>CI</th>
+            <th>Fecha Nac</th>
+            <th>Género</th>
+            <th>Grado</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Procedencia</th>
+            <th>Tutor</th>
+            <th>Celular Tutor</th>
+            <th>Parentesco</th>
+            <th>Email Tutor</th>
+            <th>Emergencia</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaPreinscripciones">
+          <!-- Datos dinámicos -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🔹 Tabla de pagos -->
+    <h2>Pagos Registrados</h2>
+    <p>Los pagos deben corresponder al estudiante previamente registrado en el formulario de preinscripción.</p>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Comprobante</th>
+          </tr>
+        </thead>
+        <tbody id="tablaPagos">
+          <!-- Datos dinámicos -->
+        </tbody>
+      </table>
+    </div>
   </main>
 
   <footer>
-    <h3>U.E Marcelino Champagnat</h3>
+    <h3>U.E. Marcelino Champagnat</h3>
     <p>Una página hecha por estudiantes de la promo &copy; 2025</p>
   </footer>
 
   <script>
+    let preinscripciones = [];
+    let pagos = [];
+
     async function cargarPreinscripciones() {
       try {
         const res = await fetch("/api/preinscripciones");
-        const data = await res.json();
+        preinscripciones = await res.json();
+        renderizarTabla(preinscripciones);
+        cargarPagos(); // también cargamos los pagos
+      } catch (err) {
+        console.error(err);
+        alert("No se pudieron cargar las preinscripciones.");
+      }
+    }
 
-        const tbody = document.getElementById("tablaPreinscripciones");
+    function renderizarTabla(data) {
+      const tbody = document.getElementById("tablaPreinscripciones");
+      tbody.innerHTML = "";
+
+      data.forEach(item => {
+        const tr = document.createElement("tr");
+        const claseEstado = item.estado === "aceptado" ? "estado-aceptado"
+                           : item.estado === "rechazado" ? "estado-rechazado"
+                           : "";
+
+        tr.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.nombres}</td>
+          <td>${item.apellidos}</td>
+          <td>${item.ci}</td>
+          <td>${item.fecha_nac}</td>
+          <td>${item.genero}</td>
+          <td>${item.grado}</td>
+          <td>${item.telefono}</td>
+          <td>${item.email}</td>
+          <td>${item.procedencia}</td>
+          <td>${item.t_nombre}</td>
+          <td>${item.t_cel}</td>
+          <td>${item.t_parentezco}</td>
+          <td>${item.t_email}</td>
+          <td>${item.emergencia}</td>
+          <td class="${claseEstado}">${item.estado}</td>
+          <td>
+            <button onclick="aceptarEstudiante(${item.id})">Aceptar</button>
+            <button onclick="rechazarEstudiante(${item.id})">Rechazar</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function cargarPagos() {
+      try {
+        const res = await fetch("/api/pagos");
+        pagos = await res.json();
+        const tbody = document.getElementById("tablaPagos");
         tbody.innerHTML = "";
 
-        data.forEach(item => {
+        pagos.forEach(p => {
           const tr = document.createElement("tr");
-
-          let claseEstado = "";
-          if(item.estado === "aceptado") claseEstado = "estado-aceptado";
-          else if(item.estado === "rechazado") claseEstado = "estado-rechazado";
-
           tr.innerHTML = `
-            <td>${item.id}</td>
-            <td>${item.nombres}</td>
-            <td>${item.apellidos}</td>
-            <td>${item.ci}</td>
-            <td>${item.fecha_nac}</td>
-            <td>${item.genero}</td>
-            <td>${item.grado}</td>
-            <td>${item.telefono}</td>
-            <td>${item.email}</td>
-            <td>${item.procedencia}</td>
-            <td>${item.t_nombre}</td>
-            <td>${item.t_cel}</td>
-            <td>${item.t_parentezco}</td>
-            <td>${item.t_email}</td>
-            <td>${item.emergencia}</td>
-            <td class="${claseEstado}">${item.estado}</td>
-            <td>
-              <button class="btn-aceptar" onclick="aceptarEstudiante(${item.id})">Aceptar</button>
-              <button class="btn-rechazar" onclick="rechazarEstudiante(${item.id})">Rechazar</button>
-            </td>
+            <td>${p.id}</td>
+            <td>${p.nombre}</td>
+            <td>${p.correo}</td>
+            <td>${p.monto}</td>
+            <td>${p.fecha}</td>
+            <td>${p.comprobante ? `<a href="${p.comprobante}" target="_blank">Ver</a>` : "No enviado"}</td>
           `;
           tbody.appendChild(tr);
         });
       } catch (err) {
         console.error(err);
-        alert("No se pudieron cargar las preinscripciones.");
+        alert("No se pudieron cargar los pagos.");
       }
+    }
+
+    function filtrarPorCurso(curso) {
+      if (curso === "todos") renderizarTabla(preinscripciones);
+      else renderizarTabla(preinscripciones.filter(i => i.grado === curso));
     }
 
     function aceptarEstudiante(id) {

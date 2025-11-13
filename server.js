@@ -8,6 +8,7 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import twilio from "twilio";
 import dotenv from "dotenv";
+import multer from "multer"; // 📸 Para subir imágenes
 
 dotenv.config(); // Cargar variables del .env
 
@@ -34,14 +35,14 @@ app.use(
   })
 );
 
-// 4️⃣ Conexión a SQLite (Render puede reiniciar contenedor → usar carpeta persistente si posible)
+// 4️⃣ Conexión a SQLite
 const dbPath = path.join(__dirname, "database.db");
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) console.error("❌ Error al abrir la base de datos:", err.message);
   else console.log("✅ Conexión a SQLite correcta");
 });
 
-// Crear tabla si no existe
+// Crear tabla preinscripciones
 db.run(`
   CREATE TABLE IF NOT EXISTS preinscripciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,6 +65,29 @@ db.run(`
   )
 `);
 
+// ✅ Nueva tabla pagos
+db.run(`
+  CREATE TABLE IF NOT EXISTS pagos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT,
+    correo TEXT,
+    monto REAL,
+    fecha TEXT,
+    comprobante TEXT
+  )
+`);
+
+// 📸 Configurar almacenamiento de Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/uploads/comprobantes"); // carpeta donde se guardan los comprobantes
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // nombre único del archivo
+  },
+});
+const upload = multer({ storage });
+
 // 5️⃣ Admin
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "12345";
@@ -75,6 +99,7 @@ app.get("/login", (req, res) => res.sendFile(path.join(__dirname, "views", "logi
 app.get("/docentes", (req, res) => res.sendFile(path.join(__dirname, "views", "docentes.html")));
 app.get("/acerca", (req, res) => res.sendFile(path.join(__dirname, "views", "acerca.html")));
 app.get("/ubicacion", (req, res) => res.sendFile(path.join(__dirname, "views", "ubicacion.html")));
+app.get("/pago", (req, res) => res.sendFile(path.join(__dirname, "views", "pago.html"))); // Nueva página de pagos
 
 // 7️⃣ Middleware de autenticación
 function authAdmin(req, res, next) {
@@ -145,11 +170,34 @@ app.get("/api/preinscripciones", authAdmin, (req, res) => {
   });
 });
 
-// 1️⃣2️⃣ TWILIO CONFIG (desde .env)
+// ✅ 1️⃣2️⃣ Registrar pago con imagen del comprobante
+app.post("/api/registrar_pago", upload.single("comprobante"), (req, res) => {
+  const { nombre, correo, monto, fecha } = req.body;
+  const comprobante = req.file ? `/uploads/comprobantes/${req.file.filename}` : null;
+
+  const sql = `
+    INSERT INTO pagos (nombre, correo, monto, fecha, comprobante)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.run(sql, [nombre, correo, monto, fecha, comprobante], function (err) {
+    if (err) res.status(500).json({ message: "Error al registrar el pago" });
+    else res.json({ message: "Pago registrado correctamente ✅" });
+  });
+});
+
+// ✅ 1️⃣3️⃣ Mostrar lista de pagos (solo admin)
+app.get("/api/pagos", authAdmin, (req, res) => {
+  db.all("SELECT * FROM pagos ORDER BY id DESC", [], (err, rows) => {
+    if (err) res.status(500).json({ message: "Error al obtener pagos" });
+    else res.json(rows);
+  });
+});
+
+// 1️⃣4️⃣ TWILIO CONFIG (desde .env)
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const whatsappNumber = process.env.TWILIO_WHATSAPP;
-
 const client = twilio(accountSid, authToken);
 
 // Función para enviar WhatsApp
@@ -168,7 +216,7 @@ async function enviarWhatsApp(numeroDestino, mensaje) {
   }
 }
 
-// 1️⃣3️⃣ Aceptar estudiante
+// 1️⃣5️⃣ Aceptar estudiante
 app.post("/api/aceptar_estudiante", authAdmin, (req, res) => {
   const { id } = req.body;
   db.get("SELECT telefono FROM preinscripciones WHERE id=?", [id], (err, row) => {
@@ -180,7 +228,8 @@ app.post("/api/aceptar_estudiante", authAdmin, (req, res) => {
     db.run("UPDATE preinscripciones SET estado='aceptado' WHERE id=?", [id], async function (err) {
       if (err) return res.status(500).json({ message: err.message });
 
-      const mensaje = "✅ Tu formulario para la inscripción al colegio Marcelino Champagnat fue aprobado. ¡Bienvenido!";
+      const mensaje =
+        "✅ Tu formulario fue aprobado. ¡Bienvenido! puedes pagar en linea mediante la pag https://pag-triana.onrender.com , escoges pago en linea.";
       try {
         await enviarWhatsApp(numero, mensaje);
         res.json({ message: "Estudiante aceptado y mensaje enviado" });
@@ -191,7 +240,7 @@ app.post("/api/aceptar_estudiante", authAdmin, (req, res) => {
   });
 });
 
-// 1️⃣4️⃣ Rechazar estudiante
+// 1️⃣6️⃣ Rechazar estudiante
 app.post("/api/rechazar_estudiante", authAdmin, (req, res) => {
   const { id } = req.body;
   db.get("SELECT telefono FROM preinscripciones WHERE id=?", [id], (err, row) => {
@@ -204,7 +253,7 @@ app.post("/api/rechazar_estudiante", authAdmin, (req, res) => {
       if (err) return res.status(500).json({ message: err.message });
 
       const mensaje =
-        "❌ Tu formulario para la inscripción al colegio Marcelino Champagnat fue rechazado. Para más información, contacta a la institución.";
+        "❌ Tu formulario fue rechazado. Para más información, contacta a la institución.";
       try {
         await enviarWhatsApp(numero, mensaje);
         res.json({ message: "Estudiante rechazado y mensaje enviado" });
@@ -215,7 +264,7 @@ app.post("/api/rechazar_estudiante", authAdmin, (req, res) => {
   });
 });
 
-// 1️⃣5️⃣ Borrar estudiante
+// 1️⃣7️⃣ Borrar estudiante
 app.post("/api/borrar_estudiante", authAdmin, (req, res) => {
   const { id } = req.body;
   db.run("DELETE FROM preinscripciones WHERE id=?", [id], function (err) {
@@ -224,5 +273,5 @@ app.post("/api/borrar_estudiante", authAdmin, (req, res) => {
   });
 });
 
-// 1️⃣6️⃣ Iniciar servidor
+// 1️⃣8️⃣ Iniciar servidor
 app.listen(PORT, () => console.log(`🚀 Servidor corriendo en el puerto ${PORT}`));
