@@ -74,9 +74,9 @@
 
     <!-- Imagen QR -->
     <div class="qr-container">
-      <img src="/img/cuere.jpeg" alt="QR de pago">
+      <img src="/img/qrvale.jpeg" alt="QR de pago">
       <p>Escanea el QR para pagar directamente desde tu aplicación de pago.</p>
-       <p>rellena el formulario con los datos exactos del estudiante a inscribir.</p>
+      <p>Rellena el formulario con los datos exactos del estudiante a inscribir.</p>
     </div>
 
     <!-- Formulario -->
@@ -103,24 +103,29 @@
   </div>
 
   <script>
-    // Rellenar campos si vienen desde la página de preinscripción
+    // Completar campos si vienen de la preinscripción
     const params = new URLSearchParams(window.location.search);
     const nombre = params.get("nombre");
     const correo = params.get("correo");
-    if(nombre) document.getElementById("nombre").value = nombre;
-    if(correo) document.getElementById("correo").value = correo;
+
+    if (nombre) document.getElementById("nombre").value = nombre;
+    if (correo) document.getElementById("correo").value = correo;
 
     const form = document.getElementById("formPago");
     const mensaje = document.getElementById("mensaje");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const formData = new FormData(form);
 
       try {
         const res = await fetch("https://pag-triana.onrender.com/api/registrar_pago", {
           method: "POST",
           body: formData,
+          headers: {
+            "Accept": "application/json"
+          }
         });
 
         const data = await res.json();
@@ -133,6 +138,7 @@
           mensaje.style.color = "red";
           mensaje.textContent = data.message || "Error al enviar el pago";
         }
+
       } catch (error) {
         mensaje.style.color = "red";
         mensaje.textContent = "Error de conexión con el servidor";

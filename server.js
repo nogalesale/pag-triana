@@ -21,7 +21,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // 3️⃣ Middlewares
-app.use(cors()); // 👈 Permite que Render acepte peticiones desde el mismo dominio o externos
+app.use(cors());
+
+// 🔥 IMPORTANTE → aumentar límite para subir imágenes
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public")); // ✅ para Render
@@ -175,7 +180,7 @@ app.get("/api/preinscripciones", authAdmin, (req, res) => {
   });
 });
 
-// ✅ 1️⃣2️⃣ Registrar pago con imagen del comprobante
+// 1️⃣2️⃣ Registrar pago con imagen del comprobante
 app.post("/api/registrar_pago", upload.single("comprobante"), (req, res) => {
   try {
     const { nombre, correo, monto, fecha } = req.body;
@@ -201,7 +206,7 @@ app.post("/api/registrar_pago", upload.single("comprobante"), (req, res) => {
   }
 });
 
-// ✅ 1️⃣3️⃣ Mostrar lista de pagos (solo admin)
+// 1️⃣3️⃣ Mostrar lista de pagos (solo admin)
 app.get("/api/pagos", authAdmin, (req, res) => {
   db.all("SELECT * FROM pagos ORDER BY id DESC", [], (err, rows) => {
     if (err) res.status(500).json({ message: "Error al obtener pagos" });
